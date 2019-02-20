@@ -8,6 +8,7 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/views/index.html'));
 });
 
+
 app.get('/settings', function(req, res) {
     res.sendFile(path.join(__dirname + '/views/01-Settings/index.html'));
 });
@@ -36,7 +37,7 @@ app.get('/controls', function(req, res) {
     res.sendFile(path.join(__dirname + '/views/07-Controls/index.html'));
 });
 
-//app.use(express.static(path.join(__dirname, '/')));
+app.use(express.static(path.join(__dirname, '/public')));
 //app.use(routes);
 
 app.listen(port, () => console.log(`Phaser Basics listening on port ${port}!`));
