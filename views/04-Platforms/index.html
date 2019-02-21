@@ -4,65 +4,60 @@
     <meta charset="UTF-8" />
     <title>Making your first Phaser 3 Game - Part 4</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
-    <style type="text/css">
-        body {
-            margin: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-Platforms
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    var config = {
-        type: Phaser.AUTO,
-        width: 800,
-        height: 600,
-        physics: {
-            default: 'arcade',
-            arcade: {
-                gravity: { y: 300 },
-                debug: false
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 300 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
             }
-        },
-        scene: {
-            preload: preload,
-            create: create,
-            update: update
+        };
+
+        var platforms;
+
+        var game = new Phaser.Game(config);
+
+        function preload ()
+        {
+            this.load.image('sky', 'assets/sky.png');
+            this.load.image('ground', 'assets/platform.png');
+            this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 64, frameHeight: 64 });
         }
-    };
 
-    var platforms;
+        var platforms;
 
-    var game = new Phaser.Game(config);
+        function create ()
+        {
+            this.add.image(400, 300, 'sky');
 
-    function preload ()
-    {
-        this.load.image('sky', 'assets/sky.png');
-        this.load.image('ground', 'assets/platform.png');
-        this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 64, frameHeight: 64 });
-    }
+            platforms = this.physics.add.staticGroup();
 
-    var platforms;
+            platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
-    function create ()
-    {
-        this.add.image(400, 300, 'sky');
+            platforms.create(600, 400, 'ground');
+            platforms.create(50, 250, 'ground');
+            platforms.create(750, 220, 'ground');
+        }
 
-        platforms = this.physics.add.staticGroup();
+        function update ()
+        {
+        }
 
-        platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-
-        platforms.create(600, 400, 'ground');
-        platforms.create(50, 250, 'ground');
-        platforms.create(750, 220, 'ground');
-    }
-
-    function update ()
-    {
-    }
-
-</script>
-
+    </script>
 </body>
 </html>
