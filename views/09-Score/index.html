@@ -12,7 +12,7 @@
     <div class="container">
         <header class="text-center">
             <a href="https://phaser.io" target="_blank"><img src="https://phaser.io/images/logo/logo-download.png" alt="Phaser"></a>
-            <h1 class="text-center">Phaser 3 - Stars</h1>
+            <h1 class="text-center">Phaser 3 - Score</h1>
         </header>
         <a href="/" class="back">&lt; Back</a>
         <div id="phaserCanvas"></div>
@@ -38,6 +38,8 @@
             }
         };
 
+        var score = 0;
+        var scoreText;
         var player;
         var stars;
         var platforms;
@@ -102,6 +104,8 @@
                 child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
             });
 
+            scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
             this.physics.add.collider(player, platforms);
             this.physics.add.collider(stars, platforms);
 
@@ -139,6 +143,8 @@
         function collectStar (player, star)
         {
             star.disableBody(true, true);
+            score += 10;
+            scoreText.setText('Score: ' + score);
         }
 
     </script>

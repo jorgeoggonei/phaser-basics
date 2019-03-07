@@ -14,7 +14,7 @@ app.get('/settings', function(req, res) {
 
 app.get('/assets', function(req, res) {
     res.sendFile(path.join(__dirname + '/views/02-Assets/index.html'));
-});
+});1
 
 app.get('/world', function(req, res) {
     res.sendFile(path.join(__dirname + '/views/03-World/index.html'));
@@ -38,6 +38,14 @@ app.get('/controls', function(req, res) {
 
 app.get('/stars', function(req, res) {
     res.sendFile(path.join(__dirname + '/views/08-Stars/index.html'));
+});
+
+app.get('/score', function(req, res) {
+    res.sendFile(path.join(__dirname + '/views/09-Score/index.html'));
+});
+
+app.get('/bombs', function(req, res) {
+    res.sendFile(path.join(__dirname + '/views/10-Bombs/index.html'));
 });
 
 app.use(express.static(path.join(__dirname, '/public')));
