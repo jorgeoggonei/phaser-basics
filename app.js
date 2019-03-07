@@ -36,6 +36,10 @@ app.get('/controls', function(req, res) {
     res.sendFile(path.join(__dirname + '/views/07-Controls/index.html'));
 });
 
+app.get('/stars', function(req, res) {
+    res.sendFile(path.join(__dirname + '/views/08-Stars/index.html'));
+});
+
 app.use(express.static(path.join(__dirname, '/public')));
 //app.use(routes);
 
