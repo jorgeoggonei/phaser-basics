@@ -48,6 +48,10 @@ app.get('/bombs', function(req, res) {
     res.sendFile(path.join(__dirname + '/views/10-Bombs/index.html'));
 });
 
+app.get('/enemies', function(req, res) {
+    res.sendFile(path.join(__dirname + '/views/12-Enemies/index.html'));
+});
+
 app.use(express.static(path.join(__dirname, '/public')));
 //app.use(routes);
 
