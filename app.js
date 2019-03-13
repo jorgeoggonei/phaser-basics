@@ -49,7 +49,11 @@ app.get('/bombs', function(req, res) {
 });
 
 app.get('/enemies', function(req, res) {
-    res.sendFile(path.join(__dirname + '/views/12-Enemies/index.html'));
+    res.sendFile(path.join(__dirname + '/views/11-Enemies/index.html'));
+});
+
+app.get('/reset', function(req, res) {
+    res.sendFile(path.join(__dirname + '/views/12-Reset/index.html'));
 });
 
 app.use(express.static(path.join(__dirname, '/public')));

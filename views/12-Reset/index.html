@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Making your first Phaser 3 Game - Part 10</title>
+    <title>Making your first Phaser 3 Game - Part 12</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="../css/style.css">
@@ -12,7 +12,7 @@
     <div class="container">
         <header class="text-center">
             <a href="https://phaser.io" target="_blank"><img src="https://phaser.io/images/logo/logo-download.png" alt="Phaser"></a>
-            <h1 class="text-center">Phaser 3 - Bombs</h1>
+            <h1 class="text-center">Phaser 3 - Reset</h1>
         </header>
         <a href="/" class="back">&lt; Back</a>
         <div id="phaserCanvas"></div>
@@ -45,6 +45,14 @@
         var platforms;
         var cursors;
         var bombs;
+        var enemies;
+        var scoreGroup;
+        var scoreImage;
+        var finalScore;
+        var resetButton;
+
+        var enemyState = 1;
+        var gameOver = false;
 
         var game = new Phaser.Game(config);
 
@@ -55,6 +63,7 @@
             this.load.image('star', 'assets/star.png');
             this.load.image('ground', 'assets/platform.png');
             this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 64, frameHeight: 64 });
+            this.load.spritesheet('enemy', 'assets/enemy.png', { frameWidth: 64, frameHeight: 64 });
         }
 
         function create ()
@@ -70,6 +79,7 @@
             platforms.create(750, 220, 'ground');
 
             player = this.physics.add.sprite(100, 450, 'dude');
+
 
             player.setBounce(0.2);
             player.setCollideWorldBounds(true);
@@ -108,16 +118,68 @@
 
             scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
+            enemies = this.physics.add.group({
+                key: 'enemy',
+                repeat: 1,
+                setXY: { x: 50, y: 150, stepX: 420 }
+            });
+
+            enemies.children.iterate(function (child) {
+                child.setBounceY(0.2);
+            });
+
+            this.anims.create({
+                key: 'leftEnemy',
+                frames: this.anims.generateFrameNumbers('enemy', { start: 9, end: 17 }),
+                frameRate: 12,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'turnEnemy',
+                frames: [ { key: 'enemy', frame: 18 } ],
+                frameRate: 12
+            });
+
+            this.anims.create({
+                key: 'rightEnemy',
+                frames: this.anims.generateFrameNumbers('enemy', { start: 27, end: 35 }),
+                frameRate: 12,
+                repeat: -1
+            });
+
             this.physics.add.collider(player, platforms);
             this.physics.add.collider(stars, platforms);
+            this.physics.add.collider(enemies, platforms);
 
             bombs = this.physics.add.group();
             this.physics.add.collider(bombs, platforms);
             this.physics.add.collider(player, bombs, hitBomb, null, this);
 
             this.physics.add.overlap(player, stars, collectStar, null, this);
+            this.physics.add.overlap(player, enemies, hitBomb, null, this);
             
             addBomb( );
+
+            //Final Score
+            scoreImage = this.add.image(400, 300, 'sky');
+            //scoreImage.alpha = 0;
+            
+            scoreGroup = this.add.group();
+            finalScore = this.add.text(140, 250, 'YOUR FINAL SCORE IS:', { fontSize: '32px', fill: '#000' });
+            //finalScore.alpha = 0;
+
+            resetButton = this.add.text(165, 300, 'RESET GAME', { fontSize: '60px', fill: '#000', backgroundColor: '#fff' })
+            .setInteractive( {useHandCursor: true} )
+            .on('pointerdown', () => this.scene.restart() );
+            resetButton.setPadding(15);
+            //resetButton.alpha = 0;
+
+            /* scoreGroup.add(scoreImage);
+            scoreGroup.add(finalScore);
+            scoreGroup.add(resetButton); */
+            scoreGroup.addMultiple([scoreImage,finalScore,resetButton]);
+            scoreGroup.toggleVisible();
 
         }
 
@@ -146,6 +208,8 @@
             {
                 player.setVelocityY(-330);
             }
+
+            moveEnemies();
         }
 
         function collectStar (player, star)
@@ -166,6 +230,7 @@
             player.setTint(0xff0000);
             player.anims.play('turn');
             gameOver = true;
+            showFinalScore();
         }
 
         function addBomb( ) {
@@ -178,6 +243,43 @@
             bomb.setBounce(1);
             bomb.setCollideWorldBounds(true);
             bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        }
+
+        function moveEnemies(){
+             enemies.children.iterate(function (child) {
+                if (enemyState < 300 && enemyState > 0 && !gameOver)
+                {
+                    child.setVelocityX(50);
+                    child.anims.play('rightEnemy', true);
+                    enemyState++;
+                }
+                else if(enemyState == 300 || gameOver)
+                {
+                    child.anims.play('turnEnemy');
+                    enemyState = -1;
+                }
+                else if(enemyState == -300 || gameOver)
+                {
+                    child.anims.play('turnEnemy');
+                    enemyState = 1;
+                }
+                else if (enemyState > -300 && enemyState < 0 && !gameOver)
+                {
+                    child.setVelocityX(-50);
+                    child.anims.play('leftEnemy', true);
+                    enemyState--;
+                }
+            });
+        }
+
+        function showFinalScore() {
+            finalScore.setText('YOUR FINAL SCORE IS: ' + score);
+            /* scoreImage.alpha = 1;
+            finalScore.alpha = 1;
+            resetButton.alpha = 1; */
+            scoreGroup.toggleVisible();
+            score = 0;
+            gameOver = false;
         }
 
     </script>
