@@ -166,10 +166,10 @@
             //scoreImage.alpha = 0;
             
             scoreGroup = this.add.group();
-            finalScore = this.add.text(140, 250, 'YOUR FINAL SCORE IS:', { fontSize: '32px', fill: '#000' });
+            finalScore = this.add.text(165, 250, 'YOUR FINAL SCORE IS:', { fontSize: '32px', fill: '#000' });
             //finalScore.alpha = 0;
 
-            resetButton = this.add.text(165, 300, 'RESET GAME', { fontSize: '60px', fill: '#000', backgroundColor: '#fff' })
+            resetButton = this.add.text(188, 300, 'RESTART GAME', { fontSize: '50px', fill: '#000', backgroundColor: '#fff', stroke: '#000', strokeThickness: 2, })
             .setInteractive( {useHandCursor: true} )
             .on('pointerdown', () => this.scene.restart() );
             resetButton.setPadding(15);
